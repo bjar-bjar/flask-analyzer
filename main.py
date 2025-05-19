@@ -13,7 +13,7 @@ def analyze():
     try:
         data = request.get_json()
         buy_date_str = data.get("buy_date")
-        buy_date = Timestamp(datetime.strptime(buy_date_str, "%Y-%m-%d"))
+        buy_date = Timestamp(buy_date_str).tz_localize("Asia/Seoul")
         ticker = data.get("ticker")
         buy_price = float(data.get("buy_price"))
         stop_price = float(data.get("stop_price"))
