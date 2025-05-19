@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import traceback
 import yfinance as yf
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -13,6 +14,8 @@ def analyze():
         ticker = data.get("ticker")
         buy_price = float(data.get("buy_price"))
         stop_price = float(data.get("stop_price"))
+        buy_date_str = data.get("buy_date")
+        buy_date = datetime.strptime(buy_date_str, "%Y-%m-%d")
 
         stock = yf.Ticker(ticker)
         hist = stock.history(period="30d")
@@ -20,7 +23,12 @@ def analyze():
         if hist.empty:
             return jsonify({"error": "해당 종목의 데이터를 가져올 수 없습니다."})
 
-        closes = hist["Close"].tolist()
+        hist_after_buy = hist[hist.index >= buy_date]
+
+        if hist_after_buy.empty:
+            return jsonify({"error": "매수일 이후의 주가 데이터가 없습니다."})
+
+        closes = hist_after_buy["Close"].tolist()
         current_price = closes[-1]
         highest_price = max(closes)
         lowest_price = min(closes)
