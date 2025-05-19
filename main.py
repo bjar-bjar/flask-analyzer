@@ -11,11 +11,11 @@ app = Flask(__name__)
 def analyze():
     try:
         data = request.get_json()
+        buy_date_str = data.get("buy_date")
+        buy_date = datetime.strptime(buy_date_str, "%Y-%m-%d")
         ticker = data.get("ticker")
         buy_price = float(data.get("buy_price"))
         stop_price = float(data.get("stop_price"))
-        buy_date_str = data.get("buy_date")
-        buy_date = datetime.strptime(buy_date_str, "%Y-%m-%d")
 
         stock = yf.Ticker(ticker)
         hist = stock.history(period="30d")
@@ -36,11 +36,11 @@ def analyze():
         result = {
             "종목코드": ticker,
             "현재가": round(current_price),
-            "최고가": round(highest_price),
-            "최저가": round(lowest_price),
-            "손절도달": lowest_price <= stop_price,
             "현재수익률": round((current_price - buy_price) / buy_price * 100, 2),
-            "최고수익률": round((highest_price - buy_price) / buy_price * 100, 2)
+            "최고가": round(highest_price),
+            "최고수익률": round((highest_price - buy_price) / buy_price * 100, 2),
+            "최저가": round(lowest_price),
+            "손절도달": lowest_price <= stop_price
         }
 
         return jsonify(result)
