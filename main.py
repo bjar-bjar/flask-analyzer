@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import traceback
 import yfinance as yf
+import os
 
 app = Flask(__name__)
 
