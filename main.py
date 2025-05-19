@@ -53,3 +53,5 @@ def analyze():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
+print("📦 받은 데이터:", data)
