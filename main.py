@@ -3,6 +3,7 @@ import traceback
 import yfinance as yf
 import os
 from datetime import datetime
+from pandas import Timestamp
 
 app = Flask(__name__)
 
@@ -12,7 +13,7 @@ def analyze():
     try:
         data = request.get_json()
         buy_date_str = data.get("buy_date")
-        buy_date = datetime.strptime(buy_date_str, "%Y-%m-%d")
+        buy_date = Timestamp(datetime.strptime(buy_date_str, "%Y-%m-%d"))
         ticker = data.get("ticker")
         buy_price = float(data.get("buy_price"))
         stop_price = float(data.get("stop_price"))
