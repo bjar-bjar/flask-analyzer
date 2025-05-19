@@ -31,7 +31,7 @@ def analyze():
 
         closes = hist_after_buy["Close"].tolist()
         current_price = closes[-1]
-        highest_price = max(closes)
+        highest_price = hist_after_buy["High"].max()
         lowest_price = min(closes)
 
         result = {
@@ -54,5 +54,3 @@ def analyze():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-print("📦 받은 데이터:", data)
