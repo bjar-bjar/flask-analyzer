@@ -22,26 +22,23 @@ def analyze():
         hist = stock.history(period="30d")
 
         if hist.empty:
-            return jsonify({"error": "해당 종목의 데이터를 가져올 수 없습니다."})
+            return jsonify({"error": "종목 데이터 없음."})
 
         hist_after_buy = hist[hist.index >= buy_date]
 
         if hist_after_buy.empty:
-            return jsonify({"error": "매수일 이후의 주가 데이터가 없습니다."})
+            return jsonify({"error": "매수일 이후 주가 데이터 없음."})
 
         closes = hist_after_buy["Close"].tolist()
         current_price = closes[-1]
         highest_price = hist_after_buy["High"].max()
-        lowest_price = min(closes)
 
         result = {
             "종목코드": ticker,
             "현재가": round(current_price),
             "현재수익률": round((current_price - buy_price) / buy_price * 100, 2),
             "최고가": round(highest_price),
-            "최고수익률": round((highest_price - buy_price) / buy_price * 100, 2),
-            "최저가": round(lowest_price),
-            "손절도달": lowest_price <= stop_price
+            "최고수익률": round((highest_price - buy_price) / buy_price * 100, 2)
         }
 
         return jsonify(result)
